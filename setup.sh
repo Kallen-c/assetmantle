@@ -56,14 +56,14 @@ assetNode init "$MANTLE_NODE_NAME" --chain-id test-mantle-1
 wget https://raw.githubusercontent.com/persistenceOne/genesisTransactions/master/test-mantle-1/final_genesis.json --output-document=${HOME}/.assetNode/config/genesis.json
 
 MANTLE_SEEDS="08ab4552a74dd7e211fc79432918d35818a67189\@52\.69\.58\.231\:26656\,449a0f1b7dafc142cf23a1f6166bbbf035edfb10\@13\.232\.85\.66\:26656\,5b27a6d4cf33909c0e5b217789e7455e261941d1\@15\.222\.29\.207\:26656"
-sed -i 's,^\(seeds[ ]*=\).*,\1'"$MANTLE_SEEDS"',g' ${HOME}/.assetNode/config/config.toml
+sed -i 's,^\(seeds[ ]*=\).*,\1"'"$MANTLE_SEEDS"'",g' ${HOME}/.assetNode/config/config.toml
 
 if [ ! $MANTLE_SERVERIP_NAME ]; then
 	read -p "Enter SERVER IP : " MANTLE_SERVERIP_NAME
 fi
 sleep 1
 echo 'export MANTLE_SERVERIP_NAME='$MANTLE_SERVERIP_NAME >> $HOME/.profile
-sed -i 's,^\(external_address[ ]*=\).*,\1tcp://'"$MANTLE_SERVERIP_NAME"'\:26656,g' ${HOME}/.assetNode/config/config.toml
+sed -i 's,^\(external_address[ ]*=\).*,\1"tcp://'"$MANTLE_SERVERIP_NAME"'\:26656",g' ${HOME}/.assetNode/config/config.toml
 
 
 if [ ! $MANTLE_GASPRICE_NAME ]; then
@@ -71,11 +71,10 @@ if [ ! $MANTLE_GASPRICE_NAME ]; then
 fi
 sleep 1
 echo 'export MANTLE_GASPRICE_NAME='$MANTLE_GASPRICE_NAME >> $HOME/.profile
-sed -i 's,^\(minimum-gas-prices[ ]*=\).*,\1'"$MANTLE_GASPRICE_NAME"',g' ${HOME}/.assetNode/config/app.toml
+sed -i 's,^\(minimum-gas-prices[ ]*=\).*,\1"'"$MANTLE_GASPRICE_NAME"'",g' ${HOME}/.assetNode/config/app.toml
 
 
 assetNode start
-
 
 
 echo -e "\033[0m"
