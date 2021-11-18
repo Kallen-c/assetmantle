@@ -77,7 +77,7 @@ echo 'export MANTLE_GASPRICE_NAME='$MANTLE_GASPRICE_NAME >> $HOME/.profile
 sed -i 's,^\(minimum-gas-prices[ ]*=\).*,\1"'"$MANTLE_GASPRICE_NAME"'",g' ${HOME}/.assetNode/config/app.toml
 
 
-assetNode start
+assetNode start </dev/null &>/root/.assetNode/log &
 
 
 echo -e "\033[0m"
