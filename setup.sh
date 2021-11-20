@@ -182,7 +182,12 @@ function iSoft {
 	external_address=`curl -s ifconfig.me`
 	peers="9a8a1d3e135531dc452172ce439dc20386064560@75.119.141.248:26656,55e140356200cecaa8f47b24cbbef6147caadda2@192.168.61.24:26656,a9668820073e0d272431e2c30ca9334d3ed22141@192.168.1.77:26656,0c34daf66b3670322d00e0f4593ca07736377ced@142.4.216.69:26656"
 	sed -i.bak -e "s/^external_address = \"\"/external_address = \"$external_address:26656\"/; s/^persistent_peers *=.*/persistent_peers = \"$peers\"/" $HOME/.assetNode/config/config.toml
-	wget -O $HOME/.assetNode/config/addrbook.json https://raw.githubusercontent.com/Kallen-c/assetmantle/main/addr.json
+MANTLE_PEERS="9641267efa0a93409d15ff3ccd15e8da86a5f60b\@65\.0\.45\.171\:26656\,a9668820073e0d272431e2c30ca9334d3ed22141\@82\.65\.223\.126\:26656\,0c34daf66b3670322d00e0f4593ca07736377ced\@142\.4\.216\.69\:26656\,3573f0af265166beb2d55f6ec3c3a3bf22297e4e\@135\.181\.139\.153\:26656\,c1f3ddb331ca43e0f93349b08d510c5d80ed9a5a\@13\.234\.66\.128\:26656\,8cf1d7933b60de02b87e2c13ee90cc78ee770e49\@65\.2\.30\.162\:26656\,6f761a62b87dc660096949762afb5aa9287b909d\@15\.206\.79\.55\:26656"
+MANTLE_SEEDS="08ab4552a74dd7e211fc79432918d35818a67189\@52\.69\.58\.231\:26656\,449a0f1b7dafc142cf23a1f6166bbbf035edfb10\@13\.232\.85\.66\:26656\,5b27a6d4cf33909c0e5b217789e7455e261941d1\@15\.222\.29\.207\:26656"
+sed -i 's,^\(persistent_peers[ ]*=\).*,\1"'"$MANTLE_PEERS"'",g' ${HOME}/.assetNode/config/config.toml
+
+sed -i 's,^\(seeds[ ]*=\).*,\1"'"$MANTLE_SEEDS"'",g' ${HOME}/.assetNode/config/config.toml
+
 }
 
 function iServ {
