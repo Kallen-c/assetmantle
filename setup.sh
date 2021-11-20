@@ -44,12 +44,12 @@ function setVa {
 		read -p "Enter node name: " MANTLE_NODENAME
 		echo 'export MANTLE_NODENAME='\"${MANTLE_NODENAME}\" >> $HOME/.bash_profile
 	fi
-	echo -e '\n\e[42mYour node name:' $MANTLE_NODENAME '\e[0m\n'
+	echo -e '\n\e[34mYour node name:' $MANTLE_NODENAME '\e[0m\n'
 	if [ ! $MANTLE_WALLET ]; then
 		read -p "Enter wallet name: " MANTLE_WALLET
 		echo 'export MANTLE_WALLET='\"${MANTLE_WALLET}\" >> $HOME/.bash_profile
 	fi
-	echo -e '\n\e[42mYour wallet name:' $MANTLE_WALLET '\e[0m\n'
+	echo -e '\n\e[34mYour wallet name:' $MANTLE_WALLET '\e[0m\n'
 	echo 'source $HOME/.bashrc' >> $HOME/.bash_profile
 	echo 'export MANTLE_CHAIN=test-mantle-1' >> $HOME/.bash_profile
 	. $HOME/.bash_profile
@@ -57,11 +57,11 @@ function setVa {
 }
 
 function sswap {
-	echo -e '\n\e[42mSet up swapfile\e[0m\n'
-  echo -e '\n\e[42m[Swap] Starting...\e[0m\n'
+	echo -e '\n\e[34mSet up swapfile\e[0m\n'
+  echo -e '\n\e[34m[Swap] Starting...\e[0m\n'
   grep -q "swapfile" /etc/fstab
   if [[ ! $? -ne 0 ]]; then
-    echo -e '\n\e[42m[Swap] Swap file exist, skip.\e[0m\n'
+    echo -e '\n\e[34m[Swap] Swap file exist, skip.\e[0m\n'
   else
     cd $HOME
     sudo fallocate -l 4G $HOME/swapfile
@@ -71,12 +71,12 @@ function sswap {
     sudo swapon $HOME/swapfile
     sudo swapon --show
     echo $HOME'/swapfile swap swap defaults 0 0' >> /etc/fstab
-    echo -e '\n\e[42m[Swap] Done\e[0m\n'
+    echo -e '\n\e[34m[Swap] Done\e[0m\n'
   fi
 }
 
 function goInst {
-	echo -e '\n\e[42mInstall Go\e[0m\n' && sleep 1
+	echo -e '\n\e[34mInstall Go\e[0m\n' && sleep 1
 	cd $HOME
 	wget -O go1.16.5.linux-amd64.tar.gz https://golang.org/dl/go1.16.5.linux-amd64.tar.gz
 	rm -rf /usr/local/go && tar -C /usr/local -xzf go1.16.5.linux-amd64.tar.gz && rm go1.16.5.linux-amd64.tar.gz
@@ -88,7 +88,7 @@ function goInst {
 }
 
 function depsInst {
-	echo -e '\n\e[42mPreparing to install\e[0m\n' && sleep 1
+	echo -e '\n\e[34mPreparing to install\e[0m\n' && sleep 1
 	cd $HOME
 	sudo apt update
 	sudo apt install make clang pkg-config libssl-dev build-essential git jq ncdu expect -y < "/dev/null"
@@ -96,7 +96,7 @@ function depsInst {
 }
 
 function crKey {
-echo -e '\n\e[42mGenerating assetMantle keys...\e[0m\n' && sleep 1
+echo -e '\n\e[34mGenerating assetMantle keys...\e[0m\n' && sleep 1
 echo -e "\n\e[45mWait some time before creating key...\e[0m\n"
 sleep 5
 mkdir -p $HOME/.assetClient
@@ -118,7 +118,7 @@ mantleAmountTmp=`assetClient q account $MANTLE_WALLET_ADDRESS | grep amount | se
 if [ "$mantleAmountTmp" -gt 0 ]; then
 	echo -e "Your wallet balance was \e[32mfunded\e[39m!"
 else
-	echo -e "Your wallet balance \e[31mwas not funded\e[39m, please request again.\e[0m"
+	echo -e "Your wallet balance \e[34mwas not funded\e[39m, please request again.\e[0m"
 	echo -e "Request command: \e[7mcurl -d '{\"address\":\"$MANTLE_WALLET_ADDRESS\"}' -H 'Content-Type: application/json'  https://api.testnet.assetmantle.one/faucet/faucetRequest\e[0m"
 	echo -e "Check your wallet balance: \e[7m$(which assetClient) q account ${MANTLE_WALLET_ADDRESS}\e[0m"
 fi
@@ -135,14 +135,14 @@ MANTLE_VALOPER=$(assetClient keys show $MANTLE_WALLET --keyring-backend test --b
 mantleValidatorString=$(assetClient q staking validators -o json | jq -r '.[] | [.operator_address, .status] | @csv' | grep $MANTLE_VALOPER | column -t -s",")
 mantleValidatorStatus=$(echo $mantleValidatorString | awk {'print $2'})
 if [ -z "${mantleValidatorString}" ]; then
-	echo -e "Your validator was \e[31mnot created\e[39m.\e[0m"
+	echo -e "Your validator was \e[34mnot created\e[39m.\e[0m"
 	echo -e "Create validator command: \n\e[7m$(which assetClient) tx staking create-validator -y --amount=9000000umantle --pubkey=`$(which assetNode) tendermint show-validator` --moniker=$MANTLE_NODENAME --commission-rate=0.10 --commission-max-rate=0.20 --commission-max-change-rate=0.01 --min-self-delegation=1 --from=$MANTLE_WALLET --keyring-backend test --chain-id=$MANTLE_CHAIN --fees 1500umantle\e[0m"
 else
 	if [ "$mantleValidatorStatus" -eq 2 ]; then
 		echo -e "You are \e[32mactive validator\e[39m now!"
 	else
-		echo -e "Your validator not in the \e[31mactive validator set\e[39m.\e[0m"
-		echo -e "Increase your \e[31mbond\e[39m amount if you want to be in the active validator set.\e[0m"
+		echo -e "Your validator not in the \e[34mactive validator set\e[39m.\e[0m"
+		echo -e "Increase your \e[34mbond\e[39m amount if you want to be in the active validator set.\e[0m"
 	fi
 fi
 }
@@ -165,7 +165,7 @@ done
 }
 
 function iSoft {
-	echo -e '\n\e[42mInstall software\e[0m\n' && sleep 1
+	echo -e '\n\e[34mInstall software\e[0m\n' && sleep 1
 	cd $HOME
 	git clone https://github.com/persistenceOne/assetMantle.git
 	cd assetMantle
@@ -186,8 +186,8 @@ function iSoft {
 }
 
 function iServ {
-echo -e '\n\e[42mRunning\e[0m\n' && sleep 1
-echo -e '\n\e[42mCreating a service\e[0m\n' && sleep 1
+echo -e '\n\e[34mRunning\e[0m\n' && sleep 1
+echo -e '\n\e[34mCreating a service\e[0m\n' && sleep 1
 
 echo "[Unit]
 Description=Asset Mantle Node
@@ -207,16 +207,16 @@ Storage=persistent
 EOF
 sudo systemctl restart systemd-journald
 sudo systemctl daemon-reload
-echo -e '\n\e[42mRunning a service\e[0m\n' && sleep 1
+echo -e '\n\e[34mRunning a service\e[0m\n' && sleep 1
 sudo systemctl enable assetd
 sudo systemctl restart assetd
-echo -e '\n\e[42mCheck node status\e[0m\n' && sleep 1
+echo -e '\n\e[34mCheck node status\e[0m\n' && sleep 1
 if [[ `service assetd status | grep active` =~ "running" ]]; then
   echo -e "Your Asset Mantle node \e[32minstalled and works\e[39m!"
   echo -e "You can check node status by the command \e[7mservice assetd status\e[0m"
   echo -e "Press \e[7mQ\e[0m for exit from status menu"
 else
-  echo -e "Your Asset Mantle node \e[31mwas not installed correctly\e[39m, please reinstall."
+  echo -e "Your Asset Mantle node \e[34mwas not installed correctly\e[39m, please reinstall."
 fi
 . $HOME/.bash_profile
 }
@@ -232,7 +232,7 @@ select opt in "${options[@]}"
 do
     case $opt in
         "Install")
-            echo -e '\n\e[42mYou choose install...\e[0m\n' && sleep 1
+            echo -e '\n\e[34mYou choose install...\e[0m\n' && sleep 1
 			setVa
 			sswap
 			depsInst
@@ -240,13 +240,13 @@ do
 			iServ
 			crKey
 			syncCheck
-			echo -e '\n\e[42mInstallation complete!\e[0m\n' && sleep 1
+			echo -e '\n\e[34mInstallation complete!\e[0m\n' && sleep 1
 			break
             ;;
 		"Disable")
-            echo -e '\n\e[31mYou choose disable...\e[0m\n' && sleep 1
+            echo -e '\n\e[34mYou choose disable...\e[0m\n' && sleep 1
 			disableAssetMantle
-			echo -e '\n\e[42massetMantle was disabled!\e[0m\n' && sleep 1
+			echo -e '\n\e[34massetMantle was disabled!\e[0m\n' && sleep 1
 			break
             ;;
         "Quit")
